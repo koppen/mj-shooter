@@ -25,7 +25,13 @@
 
       AFRAME.registerComponent('ball', {
         init: function () {
-          const el = this.el;
+          this.element = this.el;
+
+          this.element.setAttribute(
+            "animation",
+            "property: position; to: 0 0 -10; dur: 1000; easing: easeInOutQuad"
+          )
+
         }
       });
 
@@ -55,7 +61,6 @@
             radius: '0.25',
           });
           ball.setAttribute('ball', '');
-          ball.append('<a-animation attribute="position" dur="1000" fill="forwards" from="5 5 5" to="0 0 0"></a-animation>');
           this.scene.appendChild(ball);
         }
       });
