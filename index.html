@@ -28,6 +28,13 @@
           this.element = this.el;
 
           this.element.setAttribute(
+            'geometry', {
+              primitive: 'sphere',
+              radius: '0.15',
+            }
+          );
+
+          this.element.setAttribute(
             "animation",
             "property: position; to: 0 0 -10; dur: 1000; easing: easeInOutQuad"
           )
@@ -56,10 +63,6 @@
           output.setAttribute("value", JSON.stringify(worldDirection));
 
           var ball = document.createElement('a-entity');
-          ball.setAttribute('geometry', {
-            primitive: 'sphere',
-            radius: '0.25',
-          });
           ball.setAttribute('ball', '');
           this.scene.appendChild(ball);
         }
