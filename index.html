@@ -23,9 +23,16 @@
         }
       });
 
+      AFRAME.registerComponent('ball', {
+        init: function () {
+          const el = this.el;
+        }
+      });
+
       AFRAME.registerComponent('ball-shooter', {
         init: function () {
           const el = this.el;
+          const scene = document.querySelector('a-scene');
 
           el.addEventListener('triggerdown', function (event) {
             var point = new THREE.Vector3(0, 0, -1);
@@ -34,6 +41,14 @@
 
             const output = document.getElementById('output');
             output.setAttribute("value", JSON.stringify(worldDirection));
+
+            var ball = document.createElement('a-entity');
+            ball.setAttribute('geometry', {
+              primitive: 'sphere',
+              radius: '0.25',
+            });
+            ball.setAttribute('ball', '');
+            scene.appendChild(ball);
           });
         }
       });
