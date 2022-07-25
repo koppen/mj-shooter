@@ -31,26 +31,32 @@
 
       AFRAME.registerComponent('ball-shooter', {
         init: function () {
-          const el = this.el;
-          const scene = document.querySelector('a-scene');
+          this.element = this.el;
+          this.scene = document.querySelector('a-scene');
 
-          el.addEventListener('triggerdown', function (event) {
-            var point = new THREE.Vector3(0, 0, -1);
-            el.object3D.localToWorld(point);
-            var worldDirection = point.sub(el.object3D.position);
-
-            const output = document.getElementById('output');
-            output.setAttribute("value", JSON.stringify(worldDirection));
-
-            var ball = document.createElement('a-entity');
-            ball.setAttribute('geometry', {
-              primitive: 'sphere',
-              radius: '0.25',
-            });
-            ball.setAttribute('ball', '');
-            ball.append('<a-animation attribute="position" dur="1000" fill="forwards" from="5 5 5" to="0 0 0"></a-animation>');
-            scene.appendChild(ball);
+          this.element.addEventListener('triggerdown', function (event) {
+            this.shoot(event)
           });
+
+          this.element.addEventListener('click', this.shoot.bind(this));
+        },
+
+        shoot: function (event) {
+          var point = new THREE.Vector3(0, 0, -1);
+          this.element.object3D.localToWorld(point);
+          var worldDirection = point.sub(this.element.object3D.position);
+
+          const output = document.getElementById('output');
+          output.setAttribute("value", JSON.stringify(worldDirection));
+
+          var ball = document.createElement('a-entity');
+          ball.setAttribute('geometry', {
+            primitive: 'sphere',
+            radius: '0.25',
+          });
+          ball.setAttribute('ball', '');
+          ball.append('<a-animation attribute="position" dur="1000" fill="forwards" from="5 5 5" to="0 0 0"></a-animation>');
+          this.scene.appendChild(ball);
         }
       });
     </script>
@@ -66,6 +72,10 @@
       <a-sky color="#cCECfC"></a-sky>
 
       <a-entity laser-controls="hand: right; model: true" ball-shooter></a-entity>
+
+      <a-camera>
+        <a-cursor ball-shooter></a-cursor>
+      </a-camera>
     </a-scene>
   </body>
 </html>
