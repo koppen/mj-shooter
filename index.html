@@ -3,19 +3,37 @@
     <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
 
     <script>
-      AFRAME.registerComponent('x-trigger-listener', {
-        init: function () {
-          var element = this.el;
-          element.addEventListener('triggerdown', function (event, data) {
-            const output = document.getElementById('output');
-            output.setAttribute("value", "Trigger down");
-            setTimeout(function () {
-              output.setAttribute("value", data);
+      AFRAME.registerComponent('change-color-on-hover', {
+        schema: {
+          color: {default: 'red'}
+        },
 
-              setTimeout(function () {
-                output.setAttribute("value", "");
-              }, 1000);
-            }, 1000);
+        init: function () {
+          var data = this.data;
+          var el = this.el;  // <a-box>
+          var defaultColor = el.getAttribute('material').color;
+
+          el.addEventListener('mouseenter', function () {
+            el.setAttribute('color', data.color);
+          });
+
+          el.addEventListener('mouseleave', function () {
+            el.setAttribute('color', defaultColor);
+          });
+        }
+      });
+
+      AFRAME.registerComponent('ball-shooter', {
+        init: function () {
+          const el = this.el;
+
+          el.addEventListener('triggerdown', function (event) {
+            var point = new THREE.Vector3(0, 0, -1);
+            el.object3D.localToWorld(point);
+            var worldDirection = point.sub(el.object3D.position);
+
+            const output = document.getElementById('output');
+            output.setAttribute("value", JSON.stringify(worldDirection));
           });
         }
       });
@@ -25,13 +43,13 @@
     <a-scene>
       <a-text id="output" value="Hej Malthe" position="-1.5 4 -5" color="#000" scale="1.5 1.5 1.5"></a-text>
 
-      <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box>
-      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere>
+      <a-box  animation="property: rotation; to: 0 360 0; dur: 1000" position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9" change-color-on-hover="color: red"></a-box>
+      <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E" change-color-on-hover="color: blue"></a-sphere>
       <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder>
       <a-plane position="0 0 -4" rotation="-90 0 0" width="4" height="4" color="#7BC8A4"></a-plane>
       <a-sky color="#cCECfC"></a-sky>
 
-      <a-entity laser-controls="hand: right; model: true"></a-entity>
+      <a-entity laser-controls="hand: right; model: true" ball-shooter></a-entity>
     </a-scene>
   </body>
 </html>
